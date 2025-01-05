@@ -1,0 +1,79 @@
+@startuml ItemReminderFullSequenceDiagram
+
+actor User
+participant "item-reminder_bot" as ReminderBot
+participant "expiry_date_bot" as ExpiryBot
+participant "PythonService" as Service
+participant "POE_API" as API
+participant "GoogleAppsScript" as AppsScript
+participant "GoogleDrive" as Drive
+participant "GoogleSheets" as Sheets
+participant "WebInterface" as UI
+
+== Adding a New Item ==
+User -> ReminderBot : Add new item (name, expiry date)
+ReminderBot -> AppsScript : Create item request
+AppsScript -> Sheets : Add item to database
+Sheets --> AppsScript : Confirm item added
+AppsScript -> ReminderBot : Send confirmation to user
+
+== Updating an Existing Item ==
+User -> ReminderBot : Update item (ID, new details)
+ReminderBot -> AppsScript : Update item request
+AppsScript -> Sheets : Update item in database
+Sheets --> AppsScript : Confirm item updated
+AppsScript -> ReminderBot : Send confirmation to user
+
+== Deleting an Item ==
+User -> ReminderBot : Delete item (ID)
+ReminderBot -> AppsScript : Delete item request
+AppsScript -> Sheets : Remove item from database
+Sheets --> AppsScript : Confirm item deleted
+AppsScript -> ReminderBot : Send confirmation to user
+
+== Viewing Items ==
+User -> ReminderBot : Request to view items
+ReminderBot -> AppsScript : Fetch items request
+AppsScript -> Sheets : Retrieve items from database
+Sheets --> AppsScript : Return list of items
+AppsScript -> ReminderBot : Send list of items to user
+
+== Uploading Product Image ==
+User -> ExpiryBot : Upload product image
+ExpiryBot -> Service : Send image for processing
+Service -> API : Call POE API with image
+API --> Service : Return product information
+Service -> AppsScript : Request upload of product image
+AppsScript -> Drive : Upload product image
+Drive --> AppsScript : Confirm upload success
+Service -> AppsScript : Send product information update request
+AppsScript -> Sheets : Update product information in database
+Sheets --> AppsScript : Confirm update success
+AppsScript -> ExpiryBot : Send confirmation message to user
+
+== Performing CRUD through UI ==
+User -> UI : Create new item (name, expiry date)
+UI -> AppsScript : Create item request
+AppsScript -> Sheets : Add item to database via UI
+Sheets --> AppsScript : Confirm item added via UI
+AppsScript -> UI : Send confirmation message
+
+User -> UI : Read all items request
+UI -> AppsScript : Fetch items request via UI
+AppsScript -> Sheets : Retrieve items from database via UI
+Sheets --> AppsScript : Return list of items via UI
+AppsScript -> UI : Send list of items to user
+
+User -> UI : Update existing item (ID, new details)
+UI -> AppsScript : Update item request via UI
+AppsScript -> Sheets : Update item in database via UI
+Sheets --> AppsScript : Confirm item updated via UI
+AppsScript -> UI : Send confirmation message
+
+User -> UI : Delete existing item (ID)
+UI -> AppsScript : Delete item request via UI
+AppsScript -> Sheets : Remove item from database via UI
+Sheets --> AppsScript : Confirm item deleted via UI
+AppsScript -> UI : Send confirmation message
+
+@enduml
