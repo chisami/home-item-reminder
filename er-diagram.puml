@@ -1,0 +1,56 @@
+@startuml ItemReminderApplication
+
+!define RECTANGLE class
+
+RECTANGLE TelegramBot {
+    + item-reminder_bot
+    + expiry_date_bot
+}
+
+RECTANGLE GoogleAppsScript {
+    + Handle requests
+    + Schedule reminders
+    + CRUD operations
+}
+
+RECTANGLE GoogleSheets {
+    + Store product information
+}
+
+RECTANGLE GoogleDrive {
+    + Store uploaded images
+}
+
+RECTANGLE PythonService {
+    + Image processing
+    + Call POE API for product recognition
+}
+
+RECTANGLE POE_API {
+    + Extract product information from images
+}
+
+RECTANGLE WebInterface {
+    + Manage item records
+}
+
+TelegramBot --> GoogleAppsScript : Sends requests
+GoogleAppsScript --> GoogleSheets : Reads/Writes data
+GoogleAppsScript --> GoogleDrive : Uploads images
+
+TelegramBot --> PythonService : Sends image for processing
+PythonService --> POE_API : Calls API to extract product information
+POE_API --> PythonService : Returns product information
+
+PythonService --> GoogleAppsScript : Requests upload of product images
+GoogleAppsScript --> GoogleDrive : Uploads product images
+
+PythonService --> GoogleAppsScript : Updates product information request
+GoogleAppsScript --> GoogleSheets : Updates product information
+
+WebInterface --> GoogleAppsScript : Sends CRUD requests 
+GoogleAppsScript --> GoogleSheets : Performs CRUD operations
+
+GoogleAppsScript --> TelegramBot : Sends reminders
+
+@enduml
