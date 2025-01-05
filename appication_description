@@ -1,0 +1,17 @@
+Application: Item Reminder
+Description:
+The Item Reminder application records product names, expiry dates, and other relevant information in Google Sheets via a Telegram bot and Google Apps Script. It sends reminders to users through Telegram before items expire.
+
+Entry Points:
+
+Telegram
+Google Apps Script (HTML)
+Functionality:
+
+Telegram Bots:
+Item Reminder Bot (App Script):
+This bot handles requests from Telegram, allowing users to create, update, view, and delete item records through text commands. The information is stored in Google Sheets. Additionally, it has a scheduled job that checks item expiry dates and notifies users via Telegram before expiry.
+Expiry Date Bot (Python):
+This bot enables users to create item reminders by scanning product photos (two photos containing the product name, expiry date, and other information). It calls the Poe API to identify product details, which are then saved in Google Sheets. The photos are uploaded to Google Drive for reference through an API call (another Apps Script).
+Web Management Interface:
+The Item Reminder application features a web page for managing records, built using Apps Script and connected to Google Sheets, which serves as the database. Users can perform CRUD operations through a user-friendly interface.
